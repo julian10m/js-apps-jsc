@@ -1,0 +1,25 @@
+Scope and The Scope Chain --> aren't closures exactly allowing to break the scope chain? 
+
+floor is consistent, always rounds down. The fact that the absolute number is higher exactly what you would expect.
+
+put before the "autologin" and it is not true that we are already logged, but that the GUI is shown
+
+the sort should also sort the dates in the same way
+
+on the advanced DOM it would be nice to show that if we put stopPropagation on the child, and set to true the excecution on the capturing phase of an addEventListener, then the callback is excecuted on the parent 
+
+i would say that closest and querySelector are the same, but moving in opposite directions...but they are not opposite as a whole
+
+e.target.classList.contains('nav__link') --> this also affects the "Open account" button, which I guess is not desired. We should add "!event.target.classList.contains('nav__link--btn')"
+
+maybe mention that there is a callback call everytime the isIntersecting status changes, dependeing on the threshold that was set.
+
+nextSlide and prevSlide used with modulo, same for pigGame
+
+222. the abstraction is not the sign, but rather the fact that the movements are kept in an Array
+
+Get the error message net::ERR_CERT_DATE_INVALID
+
+the packets on the same IP-TCP port connection ideally traverse the same route so that there is no reordering and it is actually TCP that ensures that packets arrive, IP has to do with the allocation of IP addresses
+
+what is we wanted to display all the neighbours? how do we combine a forEach with promises
