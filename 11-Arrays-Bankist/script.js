@@ -169,19 +169,18 @@ const createHtml = function (mvt, currency, dateStr, locale, mvtId) {
       `;
 };
 
-const insertMovement = function (mvt, i) {
-  containerMovements.insertAdjacentHTML(
-    'afterbegin',
-    createHtml(mvt, this.currency, this.movementsDates[i], this.locale, i)
-  );
-};
-
 const displayMovements = function (acc, sort = false) {
+  const insertMovement = (mvt, i) => {
+    containerMovements.insertAdjacentHTML(
+      'afterbegin',
+      createHtml(mvt, acc.currency, acc.movementsDates[i], acc.locale, i)
+    );
+  };
   containerMovements.innerHTML = '';
   const mvts = sort
     ? acc.movements.slice().sort((a, b) => a - b)
     : acc.movements;
-  mvts.forEach(insertMovement.bind(acc));
+  mvts.forEach(insertMovement);
 };
 
 const displaySummary = function (acc) {
