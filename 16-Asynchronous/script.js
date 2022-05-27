@@ -93,7 +93,38 @@ const getCountryDataPromises = function (country) {
         .finally(() => console.log('I am always executed'));
 };
 
+const getCountryDataAsync = async function (country) {
+    try {
+        const pos = await getPosition();
+        const geoResp = await fetch(`https://geocode.xyz/${pos.coords.latitude},${pos.coords.longitude}?geoit=json`);
+        if (!geoResp.ok) throw new Error(`(${geoResp.status} status) Geolocation failed!`);
+        const geoData = await geoResp.json();
+        const countryResp = await fetch(`https://restcountries.com/v3.1/name/${geoData.country}`);
+        if (!countryResp.ok) throw new Error(`(${countryResp.status} status) Country ${geoData.country} not found!`);
+        const countryData = await countryResp.json();
+        console.log(geoData);
+        console.log(countryData);
+
+        renderData(countryData[0]);
+        countryData[0].borders.forEach(neigh => {
+            console.log(neigh);
+            getJSON(
+                `https://restcountries.com/v3.1/alpha/${neigh}`,
+                `Country ${neigh} not found`
+            )
+            .then(data => renderData(data[0], 'neighbour'))
+            .catch(err => renderError(`${err.message}!!`))
+            .finally(() => console.log('I am always executed'));
+        })
+    } catch (err) {
+        renderError(err.message);
+    }
+};
+
+
+
 // getCountryData('portugal');
 // getCountryData('argentina');
 // getCountryDataPromises('julian');
-btn.addEventListener('click', () => getCountryDataPromises());
+// btn.addEventListener('click', () => getCountryDataPromises());
+btn.addEventListener('click', () => getCountryDataAsync());
