@@ -53,9 +53,6 @@ const getCountryData = function (country) {
   });
 };
 
-// getCountryData('portugal');
-// getCountryData('argentina');
-
 const getJSON = function (url, errorMessage = 'Something went wrong') {
   return fetch(url).then(response => {
     if (!response.ok)
@@ -64,40 +61,39 @@ const getJSON = function (url, errorMessage = 'Something went wrong') {
   });
 };
 
+const getPosition = () =>
+    new Promise(
+        (resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject));
+
 const getCountryDataPromises = function (country) {
-  //   fetch(`https://restcountries.com/v3.1/name/${country}`)
-  //     .then(function (response) {
-  //       if (!response.ok)
-  //         throw new Error(
-  //           `(${response.status} status) Country ${country} not found`
-  //         );
-  //       return response.json();
-  //     })
-  getJSON(
-    `https://restcountries.com/v3.1/name/${country}`,
-    `Country ${country} not found`
-  )
-    .then(function (data) {
-      console.log(data);
-      renderData(data[0]);
-      data[0].borders.forEach(neigh => {
-        console.log(neigh);
-        getJSON(
-          `https://restcountries.com/v3.1/alpha/${neigh}`,
-          `Country ${neigh} not found`
-        )
-          .then(data => renderData(data[0], 'neighbour'))
-          .catch(err => renderError(`${err.message}!!`))
-          .finally(() => console.log('I am always executed'));
-      });
-    })
-    .catch(err => renderError(`${err.message}!!`))
-    .finally(() => console.log('I am always executed'));
+    getPosition()
+        .then(function(pos){
+            return getJSON(`https://geocode.xyz/${pos.coords.latitude},${pos.coords.longitude}?geoit=json`,
+                           'Geolocation failed!')        
+        })
+        .then(data => getJSON(
+            `https://restcountries.com/v3.1/name/${data.country}`,
+            `Country ${data.country} not found`
+          ))
+        .then(function (data) {
+            console.log(data);
+            renderData(data[0]);
+            data[0].borders.forEach(neigh => {
+                console.log(neigh);
+                getJSON(
+                    `https://restcountries.com/v3.1/alpha/${neigh}`,
+                    `Country ${neigh} not found`
+                )
+                .then(data => renderData(data[0], 'neighbour'))
+                .catch(err => renderError(`${err.message}!!`))
+                .finally(() => console.log('I am always executed'));
+            });
+        })
+        .catch(err => renderError(`${err.message}!!`))
+        .finally(() => console.log('I am always executed'));
 };
 
-btn.addEventListener('click', function () {
-  getCountryDataPromises('argentina');
-});
+// getCountryData('portugal');
+// getCountryData('argentina');
 // getCountryDataPromises('julian');
-
-// https://akozdev.github.io/
+btn.addEventListener('click', () => getCountryDataPromises());
