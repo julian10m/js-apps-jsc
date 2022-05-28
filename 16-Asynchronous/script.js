@@ -102,26 +102,19 @@ const getCountryDataAsync = async function (country) {
         const countryResp = await fetch(`https://restcountries.com/v3.1/name/${geoData.country}`);
         if (!countryResp.ok) throw new Error(`(${countryResp.status} status) Country ${geoData.country} not found!`);
         const countryData = await countryResp.json();
-        console.log(geoData);
-        console.log(countryData);
-
         renderData(countryData[0]);
-        countryData[0].borders.forEach(neigh => {
-            console.log(neigh);
-            getJSON(
+        const allNeighPromises = countryData[0].borders.map(async neigh => 
+            await getJSON(
                 `https://restcountries.com/v3.1/alpha/${neigh}`,
                 `Country ${neigh} not found`
             )
-            .then(data => renderData(data[0], 'neighbour'))
-            .catch(err => renderError(`${err.message}!!`))
-            .finally(() => console.log('I am always executed'));
-        })
+        )
+        const allNeighData = await Promise.all(allNeighPromises);
+        allNeighData.forEach(data => renderData(data[0], 'neighbour'));
     } catch (err) {
         renderError(err.message);
     }
 };
-
-
 
 // getCountryData('portugal');
 // getCountryData('argentina');
