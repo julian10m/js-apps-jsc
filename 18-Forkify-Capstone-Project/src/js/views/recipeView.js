@@ -5,7 +5,6 @@ import fracty  from 'fracty';
 class RecipeView extends View {
     _parentElement = document.querySelector('.recipe');
     _errorMessage = 'We could not find the recipe. Please try another one!';
-    _message = '';
 
     addHandlerRender(handler){
         ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
@@ -65,8 +64,7 @@ class RecipeView extends View {
               </button>
             </div>
           </div>
-
-          <div class="recipe__user-generated">
+          <div class="recipe__user-generated ${this._data.key ? '': 'hidden'}">
             <svg>
               <use href="${icons}.svg#icon-user"></use>
             </svg>
