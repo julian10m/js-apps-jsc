@@ -30,9 +30,9 @@ const controlRecipes = async function(){
 
 const controlSearchResults = async function(){
     try {
-        resultsView.renderSpinner();
         const queryParam = searchView.getQuery();
-        if(!queryParam) return;
+        if(!queryParam) throw new Error();
+        resultsView.renderSpinner();
         await model.loadSearchResult(queryParam);
         resultsView.render(model.getSearchResultsPage(1));
         paginationView.render(model.state.search);
