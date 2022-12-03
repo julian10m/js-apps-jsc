@@ -4,6 +4,10 @@ import icons from 'url:../../img/icons.svg';
 class PaginationView extends View {
     _parentElement = document.querySelector('.pagination');
 
+    renderError(){
+        this._clear();
+    }
+
     addHandlerClick(handler) {
         this._parentElement.addEventListener('click', function(e) {
             const btn = e.target.closest('.btn--inline');
@@ -15,7 +19,7 @@ class PaginationView extends View {
     _generateMarkup() {
         const currentPage = this._data.currentPage;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        if (numPages === 1) 
+        if (numPages === 0 || numPages === 1) 
             return '';
         if (currentPage === 1 && numPages > 1)
             return this._generateMarkupNextPage(currentPage);
